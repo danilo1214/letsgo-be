@@ -1,13 +1,17 @@
 const vars = require("./vars");
 const express = require("express");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 const bodyParser = require('body-parser')
 
 
-const {port, dbURI} = vars;
+const {port} = vars;
 const app = new express();
 
-mongoose.connect(dbURI).then(conn => {
+dotenv.config();
+const {dbURI} = process.env;
+
+mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true}).then(conn => {
     app.listen(port);
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: false }))
@@ -21,7 +25,11 @@ mongoose.connect(dbURI).then(conn => {
 
         next();
     });
-    console.log("listening");
+    console.log(`App listening on PORT ${port}`);
 
     app.use("/plan", require("./routes/plan"));
+    app.use("/user", require("./routes/user"));
+
+}).catch(err=>{
+    console.log(err);
 });

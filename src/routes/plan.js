@@ -11,7 +11,7 @@ router.post("/", (req,res)=> {
     plan.save().then(result=>{
         res.json(result);
     }).catch(err=>{
-        res.json(err.message);
+        res.status(500).json(err.message);
     });
 });
 

@@ -15,6 +15,20 @@ const ratingSchema = new Schema({
 })
 
 const userSchema = new Schema({
+    email: {
+        type: String,
+        required: 'Email address is required',
+        unique: true,
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address'],
+        min: 8,
+        max: 255
+    },
+    password: {
+        type: String,
+        required: true,
+        min: 8,
+        max: 255
+    },
     first_name: {
         type: String,
         required: true
@@ -32,18 +46,6 @@ const userSchema = new Schema({
         required: true
     },
     sex: {
-        type: String,
-        required: true
-    },
-    longitude: {
-        type: Number,
-        required: true
-    },
-    latitude: {
-        type: Number,
-        required: true
-    },
-    city: {
         type: String,
         required: true
     },
