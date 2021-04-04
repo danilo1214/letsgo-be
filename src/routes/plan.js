@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const {Plan} = require("../models");
+const {auth} = require("../middleware");
 
-router.post("/", (req,res)=> {
+router.post("/", auth , (req,res)=> {
     const plan = new Plan(req.body);
 
     console.log(req.body);
