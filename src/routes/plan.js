@@ -35,7 +35,7 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res)=>{
     const {id} = req.params;
 
-    Plan.findById(id).then(plan=>{
+    Plan.findById(id).populate("admin").then(plan=>{
         res.json(plan);
     }).catch(err=>{
         res.status(500).json({

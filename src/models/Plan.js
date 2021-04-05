@@ -69,7 +69,7 @@ const planSchema = new Schema({
     admin: {
         required: 'Plan admin is required',
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'user'
     }
 });
 
