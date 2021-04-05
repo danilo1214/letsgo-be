@@ -7,7 +7,8 @@ const {auth} = require("../middleware");
 router.post("/", auth , (req,res)=> {
     const plan = new Plan(req.body);
 
-    console.log(req.body);
+    const {user} = req;
+    plan.admin = user._id;
 
     plan.save().then(result=>{
         res.json(result);

@@ -27,35 +27,35 @@ const messageSchema = new Schema({
 const planSchema = new Schema({
     caption: {
         type: String,
-        required: true
+        required: 'Plan caption is required'
     },
     time: {
         type: Date,
-        required: true
+        required: 'Plan time is required'
     },
     longitude: {
         type: Number,
-        required: true
+        required: 'Plan longitude is required'
     },
     latitude: {
         type: Number,
-        required: true
+        required: 'Plan latitude is required'
     },
     description: {
         type: String,
-        required: true
+        required: 'Plan description is required'
     },
     cost_lower: {
         type: String,
-        required: true
+        required: 'Lower plan cost is required'
     },
     cost_upper: {
         type: Number,
-        required: true
+        required: 'Upper plan cost is required'
     },
-    current_city:{
+    current_city: {
         type: String,
-        required: true
+        required: 'City is required'
     },
     limitations: {
         type: [limitationSchema]
@@ -65,6 +65,11 @@ const planSchema = new Schema({
     },
     categories: {
         type: []
+    },
+    admin: {
+        required: 'Plan admin is required',
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 

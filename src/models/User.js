@@ -11,6 +11,10 @@ const ratingSchema = new Schema({
     comment: {
         type: String,
         required: true
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'user'
     }
 })
 
@@ -25,29 +29,29 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: 'Password is required',
         min: 8,
         max: 255
     },
     first_name: {
         type: String,
-        required: true
+        required: 'First name is required'
     },
     last_name: {
         type: String,
-        required: true
+        required: 'Last name is required'
     },
     photo_url: {
         type: String,
-        required: true
+        required: 'User photo is required'
     },
     birth_date: {
         type: Date,
-        required: true
+        required: 'Birth date is required'
     },
     sex: {
         type: String,
-        required: true
+        required: 'Sex is required'
     },
     ratings: {
         type: [ratingSchema]
