@@ -12,7 +12,7 @@ const limitationSchema = new Schema({
         type: Schema.Types.Mixed
     },
     field_name: {
-        required: true,
+        required: 'Field name is required.',
         type: String
     }
 });
@@ -20,7 +20,7 @@ const limitationSchema = new Schema({
 const messageSchema = new Schema({
     text: {
         type: String,
-        required: true
+        required: 'Text is required'
     }
 });
 
