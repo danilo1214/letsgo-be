@@ -26,5 +26,14 @@ module.exports = async (req, res, next) => {
         return;
     }
 
+
+    //TODO: check if this works for timezones
+    if(moment(time).isBefore(moment())){
+        res.status(500).json({
+            error: "Date of event needs to be in the future"
+        });
+        return;
+    }
+
     next();
 }
