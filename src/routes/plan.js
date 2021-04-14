@@ -21,6 +21,26 @@ router.post("/", auth, validatePlan, (req, res) => {
 router.get("/", (req, res) => {
     const { query } = req;
 
+    
+    if(query.caption){
+        query.caption = new RegExp(query.caption, "i");
+    }
+
+    if(query.dateFrom){
+        query.time = {
+            $gte: new Date(query.dateFrom)
+        }
+        delete query.dateFrom;
+    }
+
+    if(query.dateTo){
+        query.time = {
+            ...query.time,
+            $lte: new Date(query.dateTo)
+        }
+        delete query.dateTo;
+    }
+
     Plan.find({
         ...query
     }).then(plans => {
