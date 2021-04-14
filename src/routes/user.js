@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 const { User } = require("../models");
+const { auth } = require("../middleware");
 
 router.post("/", async (req, res) => {
     const { body } = req;
@@ -67,6 +68,10 @@ router.post("/login", async (req, res) => {
         token
     });
     
+});
+
+router.get("/authenticate", auth, (req,res)=>{
+    res.json(req.user);
 });
 
 module.exports = router;
