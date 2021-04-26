@@ -21,6 +21,7 @@ router.post("/", auth, validatePlan, (req, res) => {
 router.get("/", (req, res) => {
     const { query } = req;
 
+
     
     if(query.caption){
         query.caption = new RegExp(query.caption, "i");
@@ -41,6 +42,22 @@ router.get("/", (req, res) => {
         delete query.dateTo;
     }
 
+    if(query.priceFrom){
+        query.cost_lower = {
+            $gte: Number(query.priceFrom)
+        }
+        delete query.priceFrom;
+    }
+
+    if(query.priceTo){
+        query.cost_upper = {
+            $lte:Number( query.priceTo)
+        }
+        delete query.priceTo;
+    }
+
+
+    console.log(query)
     Plan.find({
         ...query
     }).then(plans => {

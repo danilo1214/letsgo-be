@@ -46,7 +46,7 @@ const planSchema = new Schema({
         required: 'Plan description is required'
     },
     cost_lower: {
-        type: String,
+        type: Number,
         required: 'Lower plan cost is required'
     },
     cost_upper: {
