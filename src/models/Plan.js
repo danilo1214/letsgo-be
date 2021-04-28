@@ -53,9 +53,9 @@ const planSchema = new Schema({
         type: Number,
         required: 'Upper plan cost is required'
     },
-    current_city: {
+    address: {
         type: String,
-        required: 'City is required'
+        required: 'Address is required'
     },
     limitations: {
         type: [limitationSchema]

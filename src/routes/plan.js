@@ -14,7 +14,11 @@ router.post("/", auth, validatePlan, (req, res) => {
     plan.save().then(result => {
         res.json(result);
     }).catch(err => {
-        res.status(500).json(err.message);
+        const {message} = err;
+
+        res.status(500).json({
+            error: message
+        });
     });
 });
 
@@ -65,7 +69,7 @@ router.get("/", (req, res) => {
     }).catch(err => {
         console.log(err);
         res.status(500).json({
-            message: err.message
+            error: err.message
         })
     })
 });
@@ -77,7 +81,7 @@ router.get("/:id", (req, res) => {
         res.json(plan);
     }).catch(err => {
         res.status(500).json({
-            message: err.message
+            error: err.message
         });
     })
 });
@@ -92,7 +96,7 @@ router.delete("/:id", auth, (req, res) => {
     }).catch(err => {
         console.log(err);
         res.status(404).json({
-            message: err.message
+            error: err.message
         });
     })
 });
@@ -106,7 +110,7 @@ router.patch("/:id", auth, validatePlan, (req, res) => {
     }).catch(err => {
         console.log(err.message);
         res.status(500).json({
-            message: err.message
+            error: err.message
         })
     })
 });
