@@ -55,6 +55,7 @@ router.post("/login", async (req, res) => {
         res.status(500).json({
             error: "Please enter both username and password."
         });
+        return;
     }
 
     const user = await User.findOne({ email });
@@ -63,13 +64,15 @@ router.post("/login", async (req, res) => {
         res.status(500).json({
             error: "Email or password are incorrect."
         });
+        return;
     }
 
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) {
         res.status(500).json({
-            error: "Email or password are incorrecttt."
+            error: "Email or password are incorrect."
         });
+        return;
     }
 
     const token = jwt.sign({ ...user._doc }, SECRET);

@@ -27,8 +27,9 @@ router.get("/", (req, res) => {
 
 
     
-    if(query.caption){
-        query.caption = new RegExp(query.caption, "i");
+    if(query.search){
+        query.caption = new RegExp(query.search, "i");
+        delete query.search;
     }
 
     if(query.dateFrom){
@@ -46,22 +47,21 @@ router.get("/", (req, res) => {
         delete query.dateTo;
     }
 
-    if(query.priceFrom){
+    if(query.costFrom){
         query.cost_lower = {
-            $gte: Number(query.priceFrom)
+            $gte: Number(query.costFrom)
         }
-        delete query.priceFrom;
+        delete query.costFrom;
     }
 
-    if(query.priceTo){
+    if(query.costTo){
         query.cost_upper = {
-            $lte:Number( query.priceTo)
+            $lte:Number( query.costTo)
         }
-        delete query.priceTo;
+        delete query.costTo;
     }
 
 
-    console.log(query)
     Plan.find({
         ...query
     }).then(plans => {
@@ -71,7 +71,8 @@ router.get("/", (req, res) => {
         res.status(500).json({
             error: err.message
         })
-    })
+    });
+
 });
 
 router.get("/:id", (req, res) => {
