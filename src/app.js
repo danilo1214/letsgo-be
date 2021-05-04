@@ -26,7 +26,9 @@ mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true}).then(
         next();
     });
     console.log(`App listening on PORT ${port}`);
-
+    app.get("", (req, res)=>{
+        res.json({status: "OK"});
+    })
     app.use("/plan", require("./routes/plan"));
     app.use("/user", require("./routes/user"));
 
