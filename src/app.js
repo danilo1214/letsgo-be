@@ -17,8 +17,12 @@ mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true}).then(
     app.use(bodyParser.urlencoded({ extended: false }))
 
     app.use((req, res, next) => {
-
-        res.setHeader('Access-Control-Allow-Origin', ['http://localhost:8080', 'https://xenodochial-roentgen-ed5018.netlify.app']);
+        const allowedOrigins = ['http://localhost:8080', 'https://xenodochial-roentgen-ed5018.netlify.app']
+        const origin = req.headers.origin;
+        if (allowedOrigins.includes(origin)) {
+            res.header("Access-Control-Allow-Origin", origin); 
+        }
+        
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
         res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type,Authorization');
         res.setHeader('Access-Control-Allow-Credentials', true);
