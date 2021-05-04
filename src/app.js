@@ -12,7 +12,7 @@ dotenv.config();
 const {dbURI} = process.env;
 
 mongoose.connect(dbURI, {useNewUrlParser: true, useUnifiedTopology: true}).then(conn => {
-    app.listen(port);
+    app.listen(process.env.PORT || port);
     app.use(bodyParser.json())
     app.use(bodyParser.urlencoded({ extended: false }))
 
