@@ -2,10 +2,12 @@ const express = require("express");
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
-
 const router = express.Router();
 const { User } = require("../models");
 const { auth } = require("../middleware");
+const { multerUpload, dataUri } = require("../cloud/multer");
+const { cloudinaryConfig, uploader } = require("../cloud/cloudinary");
+const { streamUpload } = require("../cloud/streamUpload");
 
 router.post("/", async (req, res) => {
     const { body } = req;
@@ -48,11 +50,7 @@ router.post("/", async (req, res) => {
     })
 });
 
-const upload = multer({
-    storage: multer.memoryStorage()
-});
-
-router.post("/photo", auth, upload.single('file'), async (req, res) => {
+router.post("/photo", auth, cloudinaryConfig, multerUpload, async (req, res) => {
     if(!req.file) {
         res.status(400).json({
             error: "No photo found."
@@ -60,6 +58,18 @@ router.post("/photo", auth, upload.single('file'), async (req, res) => {
         return;
     }
     const {_id} = req.user;
+
+    streamUpload(req).then(async result=>{
+        await User.findByIdAndUpdate(_id, {
+            photo_url: result.secure_url
+        }, { new: true }).exec().then(result=>{
+            res.json(result);
+        });
+    }).catch(err=>{
+        res.status(500).json({
+            error: err
+        })
+    });
     
 });
 
