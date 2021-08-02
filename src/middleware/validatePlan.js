@@ -1,39 +1,38 @@
-const moment = require("moment");
-const { Plan } = require("../models");
+const moment = require('moment');
+const { Plan } = require('../models');
 
 module.exports = async (req, res, next) => {
-    let plan = req.body;
-    const { id } = req.params;
+  let plan = req.body;
+  const { id } = req.params;
 
-    if (req.method === 'PATCH') {
-        const currentPlan = await Plan.findById(id);
-        plan = {
-            ...currentPlan._doc,
-            ...plan
-        }
-    }
-    const { time, cost_lower, cost_upper } = plan;
+  if (req.method === 'PATCH') {
+    const currentPlan = await Plan.findById(id);
+    plan = {
+      ...currentPlan._doc,
+      ...plan,
+    };
+  }
+  const { time, cost_lower, cost_upper } = plan;
 
-    if (!time || !cost_lower || !cost_upper) {
-        next();
-        return;
-    }
-
-    if (cost_lower > cost_upper) {
-        res.status(500).json({
-            error: "Upper cost needs to be higher than lower cost."
-        });
-        return;
-    }
-
-
-    //TODO: check if this works for timezones
-    if(moment(time).isBefore(moment())){
-        res.status(500).json({
-            error: "Date of event needs to be in the future"
-        });
-        return;
-    }
-
+  if (!time || !cost_lower || !cost_upper) {
     next();
-}
+    return;
+  }
+
+  if (cost_lower > cost_upper) {
+    res.status(500).json({
+      error: 'Upper cost needs to be higher than lower cost.',
+    });
+    return;
+  }
+
+  //TODO: check if this works for timezones
+  if (moment(time).isBefore(moment())) {
+    res.status(500).json({
+      error: 'Date of event needs to be in the future',
+    });
+    return;
+  }
+
+  next();
+};

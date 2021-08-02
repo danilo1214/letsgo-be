@@ -1,7 +1,7 @@
-const User = require("./User");
-const Plan = require("./Plan");
+const User = require('./User');
+const Plan = require('./Plan');
 
 module.exports = {
-    User,
-    Plan
-}
+  User,
+  Plan,
+};
