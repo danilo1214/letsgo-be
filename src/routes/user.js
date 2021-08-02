@@ -1,6 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
 
 const router = express.Router();
 const { User } = require("../models");
@@ -45,6 +46,21 @@ router.post("/", async (req, res) => {
             error: err.message
         });
     })
+});
+
+const upload = multer({
+    storage: multer.memoryStorage()
+});
+
+router.post("/photo", auth, upload.single('file'), async (req, res) => {
+    if(!req.file) {
+        res.status(400).json({
+            error: "No photo found."
+        });
+        return;
+    }
+    const {_id} = req.user;
+    
 });
 
 router.post("/login", async (req, res) => {
