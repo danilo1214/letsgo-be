@@ -8,6 +8,7 @@ const { auth } = require('../middleware');
 const { multerUpload, dataUri } = require('../cloud/multer');
 const { cloudinaryConfig, uploader } = require('../cloud/cloudinary');
 const { streamUpload } = require('../cloud/streamUpload');
+const { sendError } = require('../helpers/responses');
 
 router.post('/', async (req, res) => {
   const { body } = req;
@@ -15,15 +16,11 @@ router.post('/', async (req, res) => {
   // Validating if email exists
   const userExists = await User.findOne({ email: body.email });
   if (!body.password) {
-    res.status(500).json({
-      error: 'Please enter a password',
-    });
+    sendError(res, 'Please enter a password.');
     return;
   }
   if (userExists) {
-    res.status(500).json({
-      error: 'Email already exists',
-    });
+    sendError(res, 'Email already exists.');
     return;
   }
 
@@ -46,10 +43,7 @@ router.post('/', async (req, res) => {
       });
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        error: err.message,
-      });
+      sendError(res, err.message);
     });
 });
 
@@ -60,9 +54,7 @@ router.post(
   multerUpload,
   async (req, res) => {
     if (!req.file) {
-      res.status(400).json({
-        error: 'No photo found.',
-      });
+      sendError(res, 'No image found', 404);
       return;
     }
     const { _id } = req.user;
@@ -82,9 +74,7 @@ router.post(
           });
       })
       .catch((err) => {
-        res.status(500).json({
-          error: err,
-        });
+        sendError(res, err.message);
       });
   }
 );
@@ -94,26 +84,20 @@ router.post('/login', async (req, res) => {
   const { SECRET } = process.env;
 
   if (!email || !password) {
-    res.status(500).json({
-      error: 'Please enter both username and password.',
-    });
+    sendError(res, 'Please enter both username and password.');
     return;
   }
 
   const user = await User.findOne({ email });
 
   if (!user) {
-    res.status(500).json({
-      error: 'Email or password are incorrect.',
-    });
+    sendError(res, 'Email or password are incorrect.');
     return;
   }
 
-  const validPassword = await bcrypt.compare(password, user.password);
-  if (!validPassword) {
-    res.status(500).json({
-      error: 'Email or password are incorrect.',
-    });
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+  if (!isPasswordValid) {
+    sendError(res, 'Email or password are incorrect.');
     return;
   }
 
@@ -124,7 +108,6 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/authenticate', auth, (req, res) => {
-  console.log(req.user);
   res.json(req.user);
 });
 

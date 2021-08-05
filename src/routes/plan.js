@@ -3,6 +3,7 @@ const router = express.Router();
 
 const { Plan } = require('../models');
 const { auth, validatePlan } = require('../middleware');
+const { sendError } = require('../helpers/responses');
 
 router.post('/', auth, validatePlan, (req, res) => {
   const plan = new Plan(req.body);
@@ -16,11 +17,7 @@ router.post('/', auth, validatePlan, (req, res) => {
       res.json(result);
     })
     .catch((err) => {
-      const { message } = err;
-
-      res.status(500).json({
-        error: message,
-      });
+      sendError(res, err.message);
     });
 });
 
@@ -68,10 +65,7 @@ router.get('/', (req, res) => {
       res.json(plans);
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        error: err.message,
-      });
+      sendError(res, err.message);
     });
 });
 
@@ -84,9 +78,7 @@ router.get('/:id', (req, res) => {
       res.json(plan);
     })
     .catch((err) => {
-      res.status(500).json({
-        error: err.message,
-      });
+      sendError(res, err.message);
     });
 });
 
@@ -100,10 +92,7 @@ router.delete('/:id', auth, (req, res) => {
       });
     })
     .catch((err) => {
-      console.log(err);
-      res.status(404).json({
-        error: err.message,
-      });
+      sendError(res, err.message);
     });
 });
 
@@ -117,10 +106,7 @@ router.patch('/:id', auth, validatePlan, (req, res) => {
       res.json(plan);
     })
     .catch((err) => {
-      console.log(err.message);
-      res.status(500).json({
-        error: err.message,
-      });
+      sendError(res, err.message);
     });
 });
 
