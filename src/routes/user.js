@@ -1,7 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const multer = require('multer');
 const router = express.Router();
 const { User } = require('../models');
 const { auth } = require('../middleware');
@@ -9,6 +8,7 @@ const { multerUpload, dataUri } = require('../cloud/multer');
 const { cloudinaryConfig, uploader } = require('../cloud/cloudinary');
 const { streamUpload } = require('../cloud/streamUpload');
 const { sendError } = require('../helpers/responses');
+const { isPerson } = require('../tensorflow-models/blazeface');
 
 router.post('/', async (req, res) => {
   const { body } = req;
@@ -57,10 +57,18 @@ router.post(
       sendError(res, 'No image found', 404);
       return;
     }
+
+    const isUserPerson = await isPerson(req.file.buffer);
+    if(!isUserPerson){
+      sendError(res, "The photo is not of a person.");
+      return;
+    }
+  
     const { _id } = req.user;
 
     streamUpload(req)
       .then(async (result) => {
+      
         await User.findByIdAndUpdate(
           _id,
           {
