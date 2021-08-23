@@ -9,6 +9,8 @@ const { cloudinaryConfig, uploader } = require('../cloud/cloudinary');
 const { streamUpload } = require('../cloud/streamUpload');
 const { sendError } = require('../helpers/responses');
 const { isPerson } = require('../tensorflow-models/blazeface');
+const { sendMail } = require('../sendgrid/mail');
+
 
 router.post('/', async (req, res) => {
   const { body } = req;
@@ -19,10 +21,7 @@ router.post('/', async (req, res) => {
     sendError(res, 'Please enter a password.');
     return;
   }
-  if (userExists) {
-    sendError(res, 'Email already exists.');
-    return;
-  }
+  
 
   // Hashing the password
   const salt = await bcrypt.genSalt(10);
@@ -41,6 +40,8 @@ router.post('/', async (req, res) => {
         ...user._doc,
         token,
       });
+      sendMail({to: body.email, token});
+
     })
     .catch((err) => {
       sendError(res, err.message);

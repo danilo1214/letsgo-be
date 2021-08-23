@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "@sendgrid/mail": "^7.4.6",
     "@tensorflow-models/blazeface": "0.0.7",
     "@tensorflow/tfjs-node": "^3.8.0",
     "bcrypt": "^5.0.1",
