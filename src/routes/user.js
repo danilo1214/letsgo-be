@@ -21,7 +21,10 @@ router.post('/', async (req, res) => {
     sendError(res, 'Please enter a password.');
     return;
   }
-  
+  if (userExists) {
+    sendError(res, 'Email is already in use.');
+    return;
+  }
 
   // Hashing the password
   const salt = await bcrypt.genSalt(10);
@@ -40,7 +43,7 @@ router.post('/', async (req, res) => {
         ...user._doc,
         token,
       });
-      sendMail({to: body.email, token});
+      sendMail({to: body.email, token, host: req.hostname});
 
     })
     .catch((err) => {
