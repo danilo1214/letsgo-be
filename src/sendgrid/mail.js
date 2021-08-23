@@ -7,7 +7,7 @@ const sendMail = ({to, token, host}) => {
         from: 'letsgoappsv1@gmail.com',
         subject: `Verify your Letsgo account.`,
         text: `Verify your Letsgo account by clicking on this link: https://${host}:${process.env.PORT}/user/verify/${token}`,
-        html: `<div>Verify your Letsgo account by clicking on this link: <a href="https://${host}:${process.env.PORT}/user/verify/${token}">LINK</a></div>`
+        html: `<div>Verify your Letsgo account by clicking on this link: <a href="https://${host}/user/verify/${token}">LINK</a></div>`
       };
     sgMail.send(msg).then(()=>{
         console.log("success");
