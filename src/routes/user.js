@@ -13,6 +13,7 @@ const { sendMail } = require('../sendgrid/mail');
 
 
 router.post('/', async (req, res) => {
+  console.log("wtgfffffffff");
   const { body } = req;
 
   // Validating if email exists
