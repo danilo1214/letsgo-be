@@ -47,7 +47,10 @@ const userSchema = new Schema(
     },
     photo_url: {
       type: String,
-      required: 'User photo is required',
+    },
+    photo_verified: {
+      type: Boolean,
+      required: true
     },
     birth_date: {
       type: Date,
