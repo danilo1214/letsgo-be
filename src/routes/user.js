@@ -28,20 +28,18 @@ router.post('/', async (req, res) => {
 
   const salt = await bcrypt.genSalt(10);
   body.password = await bcrypt.hash(body.password, salt);
-
   body.photo_verified = false;
-
+  body.email_verified = false;
   const user = new User(body);
 
   user
     .save()
-    .then((result) => {
+    .then(async (result) => {
       const token = jwt.sign({ ...result._doc }, JWT_SECRET);
-      res.json({
-        ...result._doc,
-        token,
-      });
-      sendMail({ to: body.email, token, host: req.hostname });
+      const { email, _id } = result._doc;
+      res.json({ ...result._doc, token });
+      await User.findByIdAndUpdate(_id, { email_token: token });
+      sendMail({ to: email, token, host: req.hostname });
     })
     .catch((err) => {
       sendError(res, err.message);
@@ -70,10 +68,7 @@ router.post(
       .then(async (result) => {
         await User.findByIdAndUpdate(
           _id,
-          {
-            photo_url: result.secure_url,
-            photo_verified: true,
-          },
+          { photo_url: result.secure_url, photo_verified: true },
           { new: true }
         )
           .exec()
@@ -86,6 +81,24 @@ router.post(
       });
   }
 );
+
+router.get('/verify/:token', async (req, res) => {
+  const { token } = req.params;
+  if (!token) {
+    sendError(res, 'You did not provide a token.');
+    return;
+  }
+
+  try {
+    const user = jwt.verify(token, JWT_SECRET);
+    User.findByIdAndUpdate(user._id, { email_verified: true })
+      .exec()
+      .then((result) => res.json(result))
+      .catch((err) => sendError(res, err.message));
+  } catch (err) {
+    sendError(res, err || err);
+  }
+});
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;

@@ -31,6 +31,13 @@ const userSchema = new Schema(
       min: 8,
       max: 255,
     },
+    email_verified: {
+      type: Boolean,
+      required: true,
+    },
+    email_token: {
+      type: String,
+    },
     password: {
       type: String,
       required: 'Password is required',
@@ -50,7 +57,7 @@ const userSchema = new Schema(
     },
     photo_verified: {
       type: Boolean,
-      required: true
+      required: true,
     },
     birth_date: {
       type: Date,
