@@ -93,7 +93,9 @@ router.get('/verify/:token', async (req, res) => {
     const user = jwt.verify(token, JWT_SECRET);
     User.findByIdAndUpdate(user._id, { email_verified: true })
       .exec()
-      .then((result) => res.json(result))
+      .then((result) =>
+        res.json({ message: 'Thank you for verifying your account.' })
+      )
       .catch((err) => sendError(res, err.message));
   } catch (err) {
     sendError(res, err || err);
