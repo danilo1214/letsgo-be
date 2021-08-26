@@ -91,14 +91,22 @@ router.get('/verify/:token', async (req, res) => {
 
   try {
     const user = jwt.verify(token, JWT_SECRET);
-    User.findByIdAndUpdate(user._id, { email_verified: true })
+    const userDb = await User.findOne({ email_token: token });
+    if (!userDb) {
+      sendError(res, 'Invalid token.');
+      return;
+    }
+
+    User.findByIdAndUpdate(user._id, {
+      email_verified: true,
+      email_token: null,
+    })
       .exec()
       .then((result) =>
         res.json({ message: 'Thank you for verifying your account.' })
-      )
-      .catch((err) => sendError(res, err.message));
+      );
   } catch (err) {
-    sendError(res, err || err);
+    sendError(res, err.message || err);
   }
 });
 
